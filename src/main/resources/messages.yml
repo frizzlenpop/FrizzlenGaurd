@@ -1,0 +1,78 @@
+# FrizzlenGaurd Messages
+# Version 1.0
+
+prefix: "&8[&bFrizzlenGaurd&8] &r"
+
+# General Messages
+general:
+  no-permission: "&cYou don't have permission to do that."
+  player-only: "&cThis command can only be used by players."
+  invalid-command: "&cInvalid command. Use &7/fg help &cfor a list of commands."
+  plugin-reloaded: "&aPlugin reloaded successfully."
+  world-excluded: "&cLand claiming is disabled in this world."
+
+# Claim Messages
+claim:
+  first-point-set: "&aFirst point set at &f%x%&a, &f%y%&a, &f%z%&a."
+  second-point-set: "&aSecond point set at &f%x%&a, &f%y%&a, &f%z%&a."
+  claim-created: "&aSuccessfully created claim &f%name%&a."
+  claim-deleted: "&aSuccessfully deleted claim &f%name%&a."
+  claim-too-small: "&cClaim is too small. Minimum size is &f%size% &cblocks."
+  claim-too-large: "&cClaim is too large. Maximum size is &f%size% &cblocks."
+  claim-overlaps: "&cThis claim overlaps with an existing claim."
+  claim-limit-reached: "&cYou have reached your maximum number of claims (&f%limit%&c)."
+  not-enough-blocks: "&cYou don't have enough claim blocks. Need &f%needed%&c, have &f%have%&c."
+  not-enough-money: "&cYou don't have enough money. Need &f%needed%&c, have &f%have%&c."
+  not-owner: "&cYou don't own this claim."
+  claim-info: "&aClaim: &f%name%\n&aOwner: &f%owner%\n&aSize: &f%size% &ablocks\n&aMembers: &f%members%"
+  enter-claim: "&7You have entered &f%owner%'s &7claim: &f%name%"
+  exit-claim: "&7You have left &f%owner%'s &7claim: &f%name%"
+  no-claim-here: "&cThere is no claim here."
+  claim-visualized: "&aShowing claim boundaries for &f%name%&a."
+
+# Subregion Messages
+subregion:
+  subregion-created: "&aSuccessfully created subregion &f%name%&a."
+  subregion-deleted: "&aSuccessfully deleted subregion &f%name%&a."
+  subregion-limit-reached: "&cYou have reached the maximum number of subregions for this claim (&f%limit%&c)."
+  not-in-parent: "&cYou must create a subregion within your main claim."
+
+# Friend Messages
+friend:
+  friend-added: "&aAdded &f%player% &ato your claim with role &f%role%&a."
+  friend-removed: "&aRemoved &f%player% &afrom your claim."
+  role-changed: "&aChanged &f%player%'s &arole to &f%role%&a."
+  already-friend: "&f%player% &cis already added to this claim."
+  not-friend: "&f%player% &cis not added to this claim."
+  player-not-found: "&cPlayer &f%player% &cnot found."
+
+# Flag Messages
+flag:
+  flag-set: "&aFlag &f%flag% &aset to &f%value%&a."
+  flag-not-found: "&cFlag &f%flag% &cdoes not exist."
+  invalid-value: "&cInvalid value for flag &f%flag%&c."
+
+# Admin Messages
+admin:
+  backup-created: "&aBackup created successfully: &f%name%"
+  scan-started: "&aScanning for problematic regions..."
+  scan-complete: "&aScan complete. Found &f%count% &aproblematic regions."
+  regions-merged: "&aSuccessfully merged regions &f%region1% &aand &f%region2%&a."
+  region-resized: "&aSuccessfully resized region &f%name%&a."
+  world-excluded: "&aWorld &f%world% &ahas been excluded from claiming."
+  world-included: "&aWorld &f%world% &ahas been included for claiming."
+  excluded-worlds: "&aExcluded worlds: &f%worlds%"
+
+# GUI Messages
+gui:
+  main-title: "&8FrizzlenGaurd - Main Menu"
+  region-title: "&8Region: %name%"
+  friends-title: "&8Friends for %name%"
+  flags-title: "&8Flags for %name%"
+  settings-title: "&8Settings for %name%"
+  
+# Error Messages
+error:
+  command-error: "&cAn error occurred while executing the command."
+  data-save-error: "&cAn error occurred while saving data."
+  data-load-error: "&cAn error occurred while loading data." 

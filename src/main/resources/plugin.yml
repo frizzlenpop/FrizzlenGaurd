@@ -4,4 +4,103 @@ main: org.frizzlenpop.frizzlenGaurd.FrizzlenGaurd
 api-version: '1.21'
 load: STARTUP
 authors: [ frizzlenpop ]
-description: A Plugin for Server Protection
+description: A comprehensive land protection plugin with advanced features
+softdepend: [Vault]
+
+commands:
+  fg:
+    description: Main command for FrizzlenGaurd
+    usage: /fg <subcommand> [args...]
+    aliases: [frizzlengaurd, fguard]
+
+permissions:
+  frizzlengaurd.*:
+    description: Gives access to all FrizzlenGaurd commands
+    default: op
+    children:
+      frizzlengaurd.claim: true
+      frizzlengaurd.subclaim: true
+      frizzlengaurd.addfriend: true
+      frizzlengaurd.removefriend: true
+      frizzlengaurd.modify: true
+      frizzlengaurd.info: true
+      frizzlengaurd.setflag: true
+      frizzlengaurd.list: true
+      frizzlengaurd.gui: true
+      frizzlengaurd.admin.*: true
+  
+  frizzlengaurd.claim:
+    description: Allows players to claim regions
+    default: true
+  
+  frizzlengaurd.subclaim:
+    description: Allows players to create subregions within their claims
+    default: true
+  
+  frizzlengaurd.addfriend:
+    description: Allows players to add friends to their regions
+    default: true
+  
+  frizzlengaurd.removefriend:
+    description: Allows players to remove friends from their regions
+    default: true
+  
+  frizzlengaurd.modify:
+    description: Allows players to modify their regions
+    default: true
+  
+  frizzlengaurd.info:
+    description: Allows players to view information about regions
+    default: true
+  
+  frizzlengaurd.setflag:
+    description: Allows players to set flags on their regions
+    default: true
+  
+  frizzlengaurd.list:
+    description: Allows players to list their regions
+    default: true
+  
+  frizzlengaurd.gui:
+    description: Allows players to use the GUI
+    default: true
+  
+  frizzlengaurd.admin.*:
+    description: Gives access to all admin commands
+    default: op
+    children:
+      frizzlengaurd.admin.delete: true
+      frizzlengaurd.admin.backup: true
+      frizzlengaurd.admin.reload: true
+      frizzlengaurd.admin.scan: true
+      frizzlengaurd.admin.merge: true
+      frizzlengaurd.admin.resize: true
+      frizzlengaurd.admin.exclude: true
+  
+  frizzlengaurd.admin.delete:
+    description: Allows admins to delete any region
+    default: op
+  
+  frizzlengaurd.admin.backup:
+    description: Allows admins to create backups
+    default: op
+  
+  frizzlengaurd.admin.reload:
+    description: Allows admins to reload the plugin
+    default: op
+  
+  frizzlengaurd.admin.scan:
+    description: Allows admins to scan for problematic regions
+    default: op
+  
+  frizzlengaurd.admin.merge:
+    description: Allows admins to merge regions
+    default: op
+  
+  frizzlengaurd.admin.resize:
+    description: Allows admins to resize regions
+    default: op
+  
+  frizzlengaurd.admin.exclude:
+    description: Allows admins to manage world exclusions
+    default: op

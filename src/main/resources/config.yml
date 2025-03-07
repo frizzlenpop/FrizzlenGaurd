@@ -1,0 +1,107 @@
+# FrizzlenGaurd Configuration
+# Version 1.0
+
+# General Settings
+debug-mode: false
+auto-save-interval: 5 # Minutes between auto-saves
+auto-backup-interval: 60 # Minutes between auto-backups (0 to disable)
+max-backups: 10 # Maximum number of backups to keep
+
+# Economy Settings
+economy:
+  enabled: true # Will only work if Vault is installed
+  claim-cost-per-block: 0.5 # Cost per block when claiming
+  tax-enabled: false # Whether to tax claims
+  tax-interval: 1440 # Minutes between tax collections (24 hours)
+  tax-cost-per-block: 0.01 # Cost per block for taxes
+
+# Claim Settings
+claims:
+  max-claims-per-player: 3 # Maximum number of claims a player can have
+  max-claim-size: 10000 # Maximum size of a claim in blocks
+  min-claim-size: 25 # Minimum size of a claim in blocks
+  max-subregions-per-claim: 5 # Maximum number of subregions per claim
+  default-claim-blocks: 1000 # Default number of claim blocks for new players
+  blocks-accrued-per-hour: 100 # Claim blocks earned per hour of playtime
+
+# World Settings
+worlds:
+  excluded: [] # Worlds where claiming is disabled
+  
+# Visual Settings
+visuals:
+  enabled: true
+  particle-type: "REDSTONE" # Particle type for claim visualization
+  particle-color: "RED" # Color for claim particles
+  particle-density: 2 # Particles per block (higher = more particles)
+  show-on-entry: true # Show particles when entering a claim
+  show-on-stick-right-click: true # Show particles when right-clicking with a stick
+
+# Protection Settings
+protection:
+  default-flags:
+    pvp: false
+    mob-spawning: true
+    mob-damage: false
+    explosions: false
+    fire-spread: false
+    leaf-decay: true
+    crop-trample: false
+    piston-protection: true
+    redstone: true
+    
+# Role Settings
+roles:
+  owner:
+    color: "&c"
+    can-build: true
+    can-interact: true
+    can-container: true
+    can-teleport: true
+    can-modify-flags: true
+    can-invite: true
+    can-kick: true
+    can-create-subregion: true
+  co-owner:
+    color: "&6"
+    can-build: true
+    can-interact: true
+    can-container: true
+    can-teleport: true
+    can-modify-flags: true
+    can-invite: true
+    can-kick: true
+    can-create-subregion: false
+  trusted:
+    color: "&a"
+    can-build: true
+    can-interact: true
+    can-container: true
+    can-teleport: true
+    can-modify-flags: false
+    can-invite: false
+    can-kick: false
+    can-create-subregion: false
+  visitor:
+    color: "&7"
+    can-build: false
+    can-interact: true
+    can-container: false
+    can-teleport: true
+    can-modify-flags: false
+    can-invite: false
+    can-kick: false
+    can-create-subregion: false
+
+# Logging Settings
+logging:
+  enabled: true
+  log-block-changes: true
+  log-player-interactions: true
+  max-log-age-days: 30 # How long to keep logs (in days)
+  
+# GUI Settings
+gui:
+  enabled: true
+  main-menu-rows: 3
+  region-menu-rows: 5 
