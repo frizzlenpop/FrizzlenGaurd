@@ -10,11 +10,12 @@ import java.util.List;
 import java.util.UUID;
 
 public class MainMenu extends Menu {
+    private static final int MINIMUM_ROWS = 4; // Minimum rows needed for all items
     
     public MainMenu(FrizzlenGaurd plugin, Player player) {
         super(plugin, player, ChatColor.translateAlternateColorCodes('&', 
                 plugin.getConfigManager().getMessagesConfig().getString("gui.main-title", "&8FrizzlenGaurd - Main Menu")),
-                plugin.getConfigManager().getMainConfig().getInt("gui.main-menu-rows", 3));
+                Math.max(MINIMUM_ROWS, plugin.getConfigManager().getMainConfig().getInt("gui.main-menu-rows", 4)));
         
         setupItems();
     }
@@ -22,6 +23,9 @@ public class MainMenu extends Menu {
     @Override
     protected void setupItems() {
         UUID playerId = player.getUniqueId();
+        
+        // Fill background with glass panes
+        fillEmptySlots(Material.BLACK_STAINED_GLASS_PANE);
         
         // My Regions Button
         setItem(10, createItem(Material.CHEST, "&e&lMy Regions", 
@@ -99,8 +103,5 @@ public class MainMenu extends Menu {
                     e.setCancelled(true);
                     player.closeInventory();
                 });
-        
-        // Fill empty slots
-        fillEmptySlots(Material.BLACK_STAINED_GLASS_PANE);
     }
 } 

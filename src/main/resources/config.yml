@@ -103,5 +103,5 @@ logging:
 # GUI Settings
 gui:
   enabled: true
-  main-menu-rows: 3
+  main-menu-rows: 4
   region-menu-rows: 5 

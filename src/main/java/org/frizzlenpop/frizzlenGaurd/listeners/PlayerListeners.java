@@ -12,6 +12,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.frizzlenpop.frizzlenGaurd.FrizzlenGaurd;
 import org.frizzlenpop.frizzlenGaurd.commands.player.ClaimCommand;
 import org.frizzlenpop.frizzlenGaurd.models.LogEntry;
@@ -25,6 +27,7 @@ import java.util.UUID;
 public class PlayerListeners implements Listener {
     private final FrizzlenGaurd plugin;
     private final Map<UUID, Region> lastRegion = new HashMap<>();
+    private static final String SELECTION_STICK_NAME = ChatColor.GOLD + "Claim Selection Tool";
     
     public PlayerListeners(FrizzlenGaurd plugin) {
         this.plugin = plugin;
@@ -33,11 +36,67 @@ public class PlayerListeners implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
+        ItemStack item = event.getItem();
         
-        // Handle stick right-click for region visualization
+        // Check if the player is using a selection stick
+        if (item != null && item.getType() == Material.STICK && 
+                item.hasItemMeta() && item.getItemMeta().hasDisplayName() &&
+                item.getItemMeta().getDisplayName().equals(SELECTION_STICK_NAME)) {
+            
+            event.setCancelled(true); // Prevent normal stick behavior
+            
+            // Get the clicked block
+            if (event.getClickedBlock() == null) {
+                return;
+            }
+            
+            Location clickedLoc = event.getClickedBlock().getLocation();
+            ClaimCommand claimCommand = getClaimCommand();
+            
+            if (claimCommand == null) {
+                return;
+            }
+            
+            // Left click for pos1, right click for pos2
+            if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
+                claimCommand.setFirstPoint(player.getUniqueId(), clickedLoc);
+                String message = plugin.getConfigManager().getMessagesConfig().getString(
+                    "claim.first-point-set", "&aFirst point set at &f%x%&a, &f%y%&a, &f%z%&a.");
+                message = ChatColor.translateAlternateColorCodes('&', message)
+                    .replace("%x%", String.valueOf(clickedLoc.getBlockX()))
+                    .replace("%y%", String.valueOf(clickedLoc.getBlockY()))
+                    .replace("%z%", String.valueOf(clickedLoc.getBlockZ()));
+                player.sendMessage(message);
+                
+                // Show preview if both points are set
+                if (claimCommand.getSecondPoint(player.getUniqueId()) != null) {
+                    claimCommand.showPreview(player);
+                }
+                return;
+            } else if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                claimCommand.setSecondPoint(player.getUniqueId(), clickedLoc);
+                String message = plugin.getConfigManager().getMessagesConfig().getString(
+                    "claim.second-point-set", "&aSecond point set at &f%x%&a, &f%y%&a, &f%z%&a.");
+                message = ChatColor.translateAlternateColorCodes('&', message)
+                    .replace("%x%", String.valueOf(clickedLoc.getBlockX()))
+                    .replace("%y%", String.valueOf(clickedLoc.getBlockY()))
+                    .replace("%z%", String.valueOf(clickedLoc.getBlockZ()));
+                player.sendMessage(message);
+                
+                // Show preview if both points are set
+                if (claimCommand.getFirstPoint(player.getUniqueId()) != null) {
+                    claimCommand.showPreview(player);
+                    claimCommand.displayClaimInfo(player);
+                }
+                return;
+            }
+        }
+        
+        // Handle normal stick right-click for region visualization
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK && 
                 event.getItem() != null && 
                 event.getItem().getType() == Material.STICK &&
+                !event.getItem().hasItemMeta() &&
                 plugin.getVisualsManager().shouldShowOnStickRightClick()) {
             
             Location clickedLoc = event.getClickedBlock().getLocation();
@@ -63,6 +122,25 @@ public class PlayerListeners implements Listener {
                 event.setCancelled(true);
             }
         }
+    }
+    
+    private ClaimCommand getClaimCommand() {
+        try {
+            return (ClaimCommand) plugin.getCommand("fg").getExecutor();
+        } catch (Exception e) {
+            Logger.debug("Failed to get ClaimCommand executor");
+            return null;
+        }
+    }
+    
+    public static ItemStack createSelectionStick() {
+        ItemStack stick = new ItemStack(Material.STICK);
+        ItemMeta meta = stick.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName(SELECTION_STICK_NAME);
+            stick.setItemMeta(meta);
+        }
+        return stick;
     }
     
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
