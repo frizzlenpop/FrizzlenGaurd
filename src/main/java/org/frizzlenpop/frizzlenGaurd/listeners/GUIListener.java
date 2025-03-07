@@ -6,12 +6,15 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.frizzlenpop.frizzlenGaurd.FrizzlenGaurd;
 import org.frizzlenpop.frizzlenGaurd.gui.AbstractGUI;
 import org.frizzlenpop.frizzlenGaurd.models.Region;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 
@@ -19,11 +22,20 @@ public class GUIListener implements Listener {
     private final FrizzlenGaurd plugin;
     private final Map<UUID, AbstractGUI> openGUIs;
     private final Map<UUID, AddMemberCallback> pendingAddMembers;
+    private static final long CALLBACK_TIMEOUT = 30000; // 30 seconds
     
     public GUIListener(FrizzlenGaurd plugin) {
         this.plugin = plugin;
         this.openGUIs = new HashMap<>();
         this.pendingAddMembers = new HashMap<>();
+        
+        // Start cleanup task
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                cleanupExpiredCallbacks();
+            }
+        }.runTaskTimer(plugin, 20L, 20L); // Run every second
     }
     
     public void registerGUI(Player player, AbstractGUI gui) {
@@ -32,10 +44,28 @@ public class GUIListener implements Listener {
     
     public void unregisterGUI(Player player) {
         openGUIs.remove(player.getUniqueId());
+        // Also remove any pending callbacks when GUI is closed
+        pendingAddMembers.remove(player.getUniqueId());
     }
     
     public void registerPendingAddMember(Player player, Region region) {
         pendingAddMembers.put(player.getUniqueId(), new AddMemberCallback(region));
+    }
+    
+    private void cleanupExpiredCallbacks() {
+        long now = System.currentTimeMillis();
+        Iterator<Map.Entry<UUID, AddMemberCallback>> it = pendingAddMembers.entrySet().iterator();
+        
+        while (it.hasNext()) {
+            Map.Entry<UUID, AddMemberCallback> entry = it.next();
+            if (now - entry.getValue().timestamp > CALLBACK_TIMEOUT) {
+                Player player = plugin.getServer().getPlayer(entry.getKey());
+                if (player != null && player.isOnline()) {
+                    player.sendMessage("§cAdd member request has expired.");
+                }
+                it.remove();
+            }
+        }
     }
     
     @EventHandler
@@ -66,6 +96,12 @@ public class GUIListener implements Listener {
     }
     
     @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+        unregisterGUI(player);
+    }
+    
+    @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
         AddMemberCallback callback = pendingAddMembers.remove(player.getUniqueId());
@@ -92,7 +128,7 @@ public class GUIListener implements Listener {
         
         public void process(Player player, String targetName) {
             // Check if the callback has expired (after 30 seconds)
-            if (System.currentTimeMillis() - timestamp > 30000) {
+            if (System.currentTimeMillis() - timestamp > CALLBACK_TIMEOUT) {
                 player.sendMessage("§cAdd member request has expired. Please try again.");
                 return;
             }
