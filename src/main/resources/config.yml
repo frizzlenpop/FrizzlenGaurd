@@ -49,7 +49,40 @@ protection:
     crop-trample: false
     piston-protection: true
     redstone: true
-    
+    # New detailed flags
+    animal-breeding: true
+    animal-damage: false
+    villager-trade: true
+    item-pickup: true
+    item-drop: true
+    exp-pickup: true
+    armor-stands: false
+    item-frames: false
+    paintings: false
+    chest-access: false
+    door-use: true
+    button-use: true
+    lever-use: true
+    pressure-plate: true
+    trapdoor-use: true
+    fence-gate-use: true
+    hopper-use: false
+    dispenser-use: false
+    dropper-use: false
+    repeater-use: true
+    comparator-use: true
+    noteblock-use: true
+    jukebox-use: true
+    furnace-use: false
+    crafting-table-use: true
+    enchanting-table-use: true
+    anvil-use: true
+    grindstone-use: true
+    smithing-table-use: true
+    loom-use: true
+    campfire-use: true
+    cauldron-use: true
+
 # Role Settings
 roles:
   owner:

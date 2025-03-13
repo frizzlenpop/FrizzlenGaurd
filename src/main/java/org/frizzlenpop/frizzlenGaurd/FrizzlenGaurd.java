@@ -8,6 +8,7 @@ import org.frizzlenpop.frizzlenGaurd.data.RegionManager;
 import org.frizzlenpop.frizzlenGaurd.gui.MenuListener;
 import org.frizzlenpop.frizzlenGaurd.listeners.BlockListeners;
 import org.frizzlenpop.frizzlenGaurd.listeners.PlayerListeners;
+import org.frizzlenpop.frizzlenGaurd.listeners.InteractionListeners;
 import org.frizzlenpop.frizzlenGaurd.utils.EconomyHandler;
 import org.frizzlenpop.frizzlenGaurd.utils.Logger;
 import org.frizzlenpop.frizzlenGaurd.visuals.VisualsManager;
@@ -89,6 +90,7 @@ public final class FrizzlenGaurd extends JavaPlugin {
         // Register event listeners
         getServer().getPluginManager().registerEvents(new BlockListeners(this), this);
         getServer().getPluginManager().registerEvents(new PlayerListeners(this), this);
+        getServer().getPluginManager().registerEvents(new InteractionListeners(this), this);
         getServer().getPluginManager().registerEvents(menuListener, this);
         getServer().getPluginManager().registerEvents(guiListener, this);
         

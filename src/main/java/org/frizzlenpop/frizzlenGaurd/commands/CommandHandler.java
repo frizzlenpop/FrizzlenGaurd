@@ -41,6 +41,7 @@ public class CommandHandler implements CommandExecutor, TabCompleter {
         registerCommand(new HelpCommand(plugin, commands));
         
         // Register admin commands
+        registerCommand(new AdminClaimCommand(plugin));
         registerCommand(new DeleteRegionCommand(plugin));
         registerCommand(new BackupCommand(plugin));
         registerCommand(new ReloadCommand(plugin));

@@ -17,7 +17,14 @@ import java.util.stream.Collectors;
 public class SetFlagCommand extends AbstractCommand {
     private static final List<String> VALID_FLAGS = Arrays.asList(
             "pvp", "mob-spawning", "mob-damage", "explosions", "fire-spread", 
-            "leaf-decay", "crop-trample", "piston-protection", "redstone"
+            "leaf-decay", "crop-trample", "piston-protection", "redstone",
+            "animal-breeding", "animal-damage", "villager-trade", "item-pickup", 
+            "item-drop", "exp-pickup", "armor-stands", "item-frames", "paintings",
+            "chest-access", "door-use", "button-use", "lever-use", "pressure-plate",
+            "trapdoor-use", "fence-gate-use", "hopper-use", "dispenser-use", "dropper-use",
+            "repeater-use", "comparator-use", "noteblock-use", "jukebox-use", 
+            "furnace-use", "crafting-table-use", "enchanting-table-use", "anvil-use",
+            "grindstone-use", "smithing-table-use", "loom-use", "campfire-use", "cauldron-use"
     );
     
     private static final List<String> VALID_VALUES = Arrays.asList("true", "false", "on", "off", "allow", "deny", "yes", "no");
