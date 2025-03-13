@@ -21,6 +21,9 @@ public class ClaimCommand extends AbstractCommand {
     private final Map<UUID, Location> firstPoints = new ConcurrentHashMap<>();
     private final Map<UUID, Location> secondPoints = new ConcurrentHashMap<>();
     private final Map<UUID, Boolean> previewMode = new ConcurrentHashMap<>();
+    private final Map<UUID, Long> stickCooldowns = new ConcurrentHashMap<>();
+    
+    private static final long STICK_COOLDOWN = 60000; // 1 minute cooldown
     
     public ClaimCommand(FrizzlenGaurd plugin) {
         super(plugin, "claim", "Creates a new region claim", "/fg claim [pos1|pos2|preview|<name>]", "frizzlengaurd.claim");
@@ -52,10 +55,33 @@ public class ClaimCommand extends AbstractCommand {
         
         // No arguments - give selection stick
         if (args.length == 0) {
+            // Check cooldown
+            long currentTime = System.currentTimeMillis();
+            long lastStickTime = stickCooldowns.getOrDefault(playerId, 0L);
+            
+            if (currentTime - lastStickTime < STICK_COOLDOWN && !player.hasPermission("frizzlengaurd.admin.bypass")) {
+                int remainingSeconds = (int) ((STICK_COOLDOWN - (currentTime - lastStickTime)) / 1000);
+                sender.sendMessage(ChatColor.RED + "You must wait " + remainingSeconds + " seconds before getting another claim stick.");
+                return true;
+            }
+            
+            // Check if player already has a selection stick
+            for (ItemStack item : player.getInventory().getContents()) {
+                if (item != null && item.getType() == Material.STICK && 
+                        item.hasItemMeta() && item.getItemMeta().hasDisplayName() &&
+                        item.getItemMeta().getDisplayName().equals(PlayerListeners.SELECTION_STICK_NAME)) {
+                    sender.sendMessage(ChatColor.YELLOW + "You already have a claim selection tool.");
+                    return true;
+                }
+            }
+            
             ItemStack selectionStick = PlayerListeners.createSelectionStick();
             player.getInventory().addItem(selectionStick);
             sender.sendMessage(ChatColor.GREEN + "You have been given a claim selection tool.");
             sender.sendMessage(ChatColor.YELLOW + "Left click to set position 1, right click to set position 2.");
+            
+            // Update cooldown
+            stickCooldowns.put(playerId, currentTime);
             return true;
         }
         

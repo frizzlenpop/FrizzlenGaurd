@@ -289,6 +289,15 @@ public class Region implements ConfigurationSerializable {
         result.put("maxY", maxY);
         result.put("maxZ", maxZ);
         
+        // Make sure minPoint and maxPoint are set
+        if (minPoint == null || maxPoint == null) {
+            World world = Bukkit.getWorld(worldName);
+            if (world != null) {
+                minPoint = new Location(world, minX, minY, minZ);
+                maxPoint = new Location(world, maxX, maxY, maxZ);
+            }
+        }
+        
         // Serialize members
         Map<String, String> serializedMembers = new HashMap<>();
         for (Map.Entry<UUID, Role> entry : members.entrySet()) {
@@ -336,6 +345,11 @@ public class Region implements ConfigurationSerializable {
         Location pos2 = new Location(world, maxX, maxY, maxZ);
         
         Region region = new Region(id, name, owner, pos1, pos2);
+        
+        // Set the min/max points explicitly
+        region.minPoint = pos1;
+        region.maxPoint = pos2;
+        region.world = world;
         
         // Deserialize members
         Map<String, String> serializedMembers = (Map<String, String>) data.get("members");

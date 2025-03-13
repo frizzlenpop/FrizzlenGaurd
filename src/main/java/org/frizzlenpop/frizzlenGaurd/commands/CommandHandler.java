@@ -20,13 +20,15 @@ import java.util.stream.Collectors;
 public class CommandHandler implements CommandExecutor, TabCompleter {
     private final FrizzlenGaurd plugin;
     private final Map<String, SubCommand> commands;
+    private ClaimCommand claimCommand;
     
     public CommandHandler(FrizzlenGaurd plugin) {
         this.plugin = plugin;
         this.commands = new HashMap<>();
         
         // Register player commands
-        registerCommand(new ClaimCommand(plugin));
+        this.claimCommand = new ClaimCommand(plugin);
+        registerCommand(claimCommand);
         registerCommand(new SubclaimCommand(plugin));
         registerCommand(new AddFriendCommand(plugin));
         registerCommand(new RemoveFriendCommand(plugin));
@@ -114,5 +116,9 @@ public class CommandHandler implements CommandExecutor, TabCompleter {
     
     public Map<String, SubCommand> getCommands() {
         return commands;
+    }
+    
+    public ClaimCommand getClaimCommand() {
+        return claimCommand;
     }
 } 

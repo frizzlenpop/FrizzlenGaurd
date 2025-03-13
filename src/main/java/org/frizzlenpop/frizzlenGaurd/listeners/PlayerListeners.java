@@ -19,6 +19,7 @@ import org.frizzlenpop.frizzlenGaurd.commands.player.ClaimCommand;
 import org.frizzlenpop.frizzlenGaurd.models.LogEntry;
 import org.frizzlenpop.frizzlenGaurd.models.Region;
 import org.frizzlenpop.frizzlenGaurd.utils.Logger;
+import org.frizzlenpop.frizzlenGaurd.commands.CommandHandler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +28,7 @@ import java.util.UUID;
 public class PlayerListeners implements Listener {
     private final FrizzlenGaurd plugin;
     private final Map<UUID, Region> lastRegion = new HashMap<>();
-    private static final String SELECTION_STICK_NAME = ChatColor.GOLD + "Claim Selection Tool";
+    public static final String SELECTION_STICK_NAME = ChatColor.GOLD + "Claim Selection Tool";
     
     public PlayerListeners(FrizzlenGaurd plugin) {
         this.plugin = plugin;
@@ -126,7 +127,7 @@ public class PlayerListeners implements Listener {
     
     private ClaimCommand getClaimCommand() {
         try {
-            return (ClaimCommand) plugin.getCommand("fg").getExecutor();
+            return ((CommandHandler) plugin.getCommand("fg").getExecutor()).getClaimCommand();
         } catch (Exception e) {
             Logger.debug("Failed to get ClaimCommand executor");
             return null;
