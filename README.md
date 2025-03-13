@@ -1,134 +1,144 @@
-# FrizzlenGaurd
+# FrizzlenGaurd - Advanced Land Protection System
 
-FrizzlenGaurd is a powerful and feature-rich land protection plugin for Minecraft servers. It allows players to claim and protect their land, manage permissions, and customize their protected regions.
+FrizzlenGaurd is a powerful and flexible land protection plugin for Minecraft servers, offering advanced region management with granular permissions, visual feedback, and extensive customization options.
 
-## Features
+## Table of Contents
 
-- **Advanced Region Protection**
-  - Cuboid region selection and claiming
-  - Visual boundary markers and preview mode
-  - Comprehensive permission system
-  - Customizable flags for each region
+- [Introduction](#introduction)
+- [Key Features](#key-features)
+- [Installation](#installation)
+- [Basic Usage](#basic-usage)
+- [Command Reference](#command-reference)
+- [Permission System](#permission-system)
+- [Flag System](#flag-system)
+- [Configuration](#configuration)
+- [Detailed Documentation](#detailed-documentation)
 
-- **Region Management**
-  - Merge and resize regions
-  - Member management with roles (Owner, Member)
-  - Flag configuration through GUI
-  - Region teleportation
+## Introduction
 
-- **Economy Integration**
-  - Land rental system
-  - Configurable prices and durations
-  - Automatic rent collection and expiration
+FrizzlenGaurd allows players to protect their builds by creating claims (regions) where other players' actions are restricted based on configurable permissions. With an extensive flag system and role-based permissions, you can fine-tune exactly what actions are allowed within each region.
 
-- **Administrative Tools**
-  - Region scanning for issues
-  - Backup and restore system
-  - Permission-based claim block limits
-  - Comprehensive logging system
+## Key Features
 
-- **Notification System**
-  - Customizable alerts for region events
-  - Multiple notification types (chat, title, sound)
-  - Per-player notification settings
+### Core Protection
+- **Advanced Land Claiming**: Create and manage protected regions using cuboid selections
+- **Multi-tier Permissions**: Granular control with OWNER, MEMBER, and VISITOR roles
+- **Subregions Support**: Create nested regions with inheritance or override settings
+- **Flag System**: 40+ customizable region flags to control specific behaviors
+- **Multi-world Support**: Protect regions across different worlds with world exclusion options
 
-## Commands
+### Management Features
+- **Visual Feedback**: Particle effects for region boundaries and selection preview
+- **GUI Interface**: User-friendly menus for region management
+- **Logging System**: Track changes and modifications within regions
+- **Economy Integration**: Optional Vault integration for land claiming costs
 
-### Player Commands
-
-- `/fg claim [preview]` - Claim a new region
-  - Use wooden axe to select corners
-  - Optional preview mode to visualize selection
-
-- `/fg merge <region1> <region2> [newName]` - Merge two adjacent regions
-  - Regions must be owned by the same player or require admin permission
-  - All permissions and settings are preserved
-
-- `/fg resize <region> <direction> <amount>` - Resize a region
-  - Directions: north, south, east, west, up, down
-  - Amount in blocks to expand/shrink
-
-- `/fg manage <region> <flags|members>` - Open management GUI
-  - Flags: Configure region protection settings
-  - Members: Add/remove members and set roles
-
-- `/fg tp <region>` - Teleport to a region
-  - Requires appropriate permissions
-  - Finds safe location automatically
-
-- `/fg rent <set|cancel|info> [region] [price] [duration]` - Manage region rentals
-  - Set regions for rent with custom prices
-  - View rental information
-  - Requires Vault economy
-
-- `/fg notify <toggle|settings> [type] [value]` - Configure notifications
-  - Toggle all notifications
-  - Customize notification types
-
-### Admin Commands
-
-- `/fg scan [type] [radius]` - Scan for problematic regions
-  - Types: overlap, orphaned, empty, all
-  - Configurable scan radius
-
-- `/fg backup <create|restore|list> [name] [description]` - Manage backups
-  - Create manual backups
-  - Restore from previous backups
-  - List available backups
-
-- `/fg limit <set|info> <player> [limit]` - Manage claim limits
-  - Set custom limits per player
-  - View player's claim usage
-
-## Permissions
-
-- `frizzlengaurd.claim` - Allow claiming regions
-- `frizzlengaurd.merge` - Allow merging regions
-- `frizzlengaurd.resize` - Allow resizing regions
-- `frizzlengaurd.manage` - Allow using management GUI
-- `frizzlengaurd.teleport` - Allow teleporting to regions
-- `frizzlengaurd.rent` - Allow using rental system
-- `frizzlengaurd.notify` - Allow notification configuration
-- `frizzlengaurd.admin` - Grant all administrative permissions
-- `frizzlengaurd.admin.scan` - Allow scanning regions
-- `frizzlengaurd.admin.backup` - Allow backup management
-- `frizzlengaurd.admin.limit` - Allow managing claim limits
-
-## Configuration
-
-The plugin uses several configuration files:
-
-- `config.yml` - Main configuration file
-  - Economy settings
-  - Claim limits
-  - Notification settings
-  - Backup configuration
-
-- `regions.yml` - Region data storage
-  - Region boundaries
-  - Permissions
-  - Flags
-  - Member lists
-
-## Dependencies
-
-- Vault (optional) - Required for economy features
-- WorldGuard (compatible) - Regions can coexist
+### Admin Tools
+- **Admin Claims**: Powerful tool for creating server-controlled regions without restrictions
+- **Region Management**: Tools for merging, resizing and monitoring regions
+- **Backup System**: Automated backup and restore functionality
 
 ## Installation
 
-1. Place the plugin JAR in your server's `plugins` folder
-2. Restart the server
-3. Configure the plugin in `config.yml`
-4. Set up permissions for your players
+1. Download the latest release from the GitHub repository
+2. Place the JAR file in your server's `plugins` folder
+3. Restart your server
+4. Configure the plugin in `plugins/FrizzlenGaurd/config.yml`
 
-## Support
+## Basic Usage
 
-For support, please:
-1. Check the documentation
-2. Search existing issues
-3. Create a new issue if needed
+### Creating a Claim
 
-## License
+1. Get a selection tool: `/fg claim`
+2. Left-click to set position 1
+3. Right-click to set position 2
+4. Create the claim: `/fg claim <name>`
 
-This plugin is released under the MIT License. See the LICENSE file for details. 
+### Managing Permissions
+
+1. Add a member: `/fg addfriend <region> <player> [role]`
+2. Remove a member: `/fg removefriend <region> <player>`
+3. Set member role: `/fg setrole <region> <player> <role>`
+
+### Setting Flags
+
+Set region flags: `/fg setflag <region> <flag> <value>`
+
+For example:
+- `/fg setflag myregion pvp false` - Disable PvP in your region
+- `/fg setflag myregion chest-access true` - Allow visitors to open chests
+
+## Command Reference
+
+### Player Commands
+- `/fg claim` - Start a claim session / get a claim stick
+- `/fg claim pos1` - Set first position at current location
+- `/fg claim pos2` - Set second position at current location
+- `/fg claim <name>` - Create a claim with selected points
+- `/fg claim preview` - Toggle selection preview
+- `/fg subclaim <name>` - Create a subregion
+- `/fg addfriend <region> <player> [role]` - Add member to region
+- `/fg removefriend <region> <player>` - Remove member from region
+- `/fg setrole <region> <player> <role>` - Change member's role
+- `/fg regioninfo [region]` - Display region details
+- `/fg setflag <region> <flag> <value>` - Toggle region flag
+- `/fg listregions` - List your accessible regions
+- `/fg gui` - Open management GUI
+- `/fg logs <region>` - View region logs
+
+### Admin Commands
+- `/fg adminclaim <name>` - Create an admin claim without restrictions
+- `/fg delregion <region>` - Force delete region
+- `/fg backup` - Create data backup
+- `/fg reload` - Reload configuration
+- `/fg scan` - Check for issues
+- `/fg merge <target> <source>` - Merge regions
+- `/fg resize <region>` - Modify region size
+
+## Permission System
+
+FrizzlenGaurd uses a role-based permission system within regions:
+
+- **OWNER**: Full control over the region
+- **MEMBER**: Can build and interact, but cannot modify flags or manage members
+- **VISITOR**: Limited interaction based on region flags
+
+### Core Permissions
+
+- `frizzlengaurd.claim` - Allow claiming regions
+- `frizzlengaurd.subclaim` - Allow creating subregions
+- `frizzlengaurd.addfriend` - Allow adding members to regions
+- `frizzlengaurd.setflag` - Allow setting region flags
+- `frizzlengaurd.admin.claim` - Allow creating admin claims
+- `frizzlengaurd.admin.bypass` - Bypass region restrictions
+- `frizzlengaurd.admin.*` - All admin permissions
+
+## Flag System
+
+FrizzlenGaurd features an extensive flag system with 40+ flags to control nearly every aspect of gameplay within regions. [See detailed flag documentation](FLAGS.md).
+
+Key flag categories:
+- **Protection flags**: pvp, mob-spawning, explosions, fire-spread
+- **Interaction flags**: chest-access, door-use, button-use, lever-use
+- **Redstone flags**: repeater-use, comparator-use, redstone
+- **Entity flags**: animal-breeding, animal-damage, villager-trade
+- **Block-specific flags**: furnace-use, anvil-use, crafting-table-use
+
+## Configuration
+
+The plugin creates the following configuration files:
+- `config.yml` - Main configuration
+- `regions.yml` - Region data storage
+- `messages.yml` - Customizable messages
+
+See the [Configuration Guide](CONFIGURATION.md) for detailed information on all configuration options.
+
+## Detailed Documentation
+
+For more in-depth information about specific features, please refer to these detailed guides:
+
+- [Claiming System](CLAIMING.md) - Detailed guide on creating and managing claims
+- [Flag System](FLAGS.md) - Complete list of flags and their effects
+- [Admin Tools](ADMIN.md) - Guide for server administrators
+- [Role System](ROLES.md) - Details on the permission roles
+- [Configuration Guide](CONFIGURATION.md) - Complete configuration reference 
