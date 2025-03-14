@@ -13,6 +13,7 @@ import org.frizzlenpop.frizzlenGaurd.models.LogEntry;
 import org.frizzlenpop.frizzlenGaurd.models.Region;
 import org.frizzlenpop.frizzlenGaurd.utils.EconomyHandler;
 import org.frizzlenpop.frizzlenGaurd.utils.Logger;
+import org.frizzlenpop.frizzlenGaurd.utils.PermissionsManager;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -161,11 +162,11 @@ public class ClaimCommand extends AbstractCommand {
             // Check specific reasons why the region couldn't be created
             if (!plugin.getRegionManager().canCreateRegion(player, pos1, pos2)) {
                 // Check player claim limit
-                int maxClaims = plugin.getConfigManager().getMainConfig().getInt("claims.max-claims-per-player", 3);
-                if (plugin.getRegionManager().getPlayerRegions(playerId).size() >= maxClaims) {
-                    String message = getMessage("claim.claim-limit-reached", 
-                            "&cYou have reached your maximum number of claims (&f%limit%&c).");
-                    message = message.replace("%limit%", String.valueOf(maxClaims));
+                PermissionsManager permissionsManager = plugin.getPermissionsManager();
+                if (!permissionsManager.canCreateClaim(player) && !player.hasPermission("frizzlengaurd.admin.*")) {
+                    String message = getMessage("claim.too-many-claims", 
+                            "&cYou have reached your maximum number of claims (&f%max%&c).");
+                    message = message.replace("%max%", String.valueOf(permissionsManager.getMaxClaims(player)));
                     sender.sendMessage(message);
                     return true;
                 }
@@ -192,12 +193,11 @@ public class ClaimCommand extends AbstractCommand {
                 }
                 
                 // Check claim blocks
-                int claimBlocks = plugin.getDataManager().getPlayerClaimBlocks(playerId);
-                if (area > claimBlocks && !player.hasPermission("frizzlengaurd.admin.*")) {
+                if (!permissionsManager.hasEnoughClaimBlocks(player, area) && !player.hasPermission("frizzlengaurd.admin.*")) {
                     String message = getMessage("claim.not-enough-blocks", 
                             "&cYou don't have enough claim blocks. Need &f%needed%&c, have &f%have%&c.");
                     message = message.replace("%needed%", String.valueOf(area))
-                                   .replace("%have%", String.valueOf(claimBlocks));
+                                   .replace("%have%", String.valueOf(permissionsManager.getRemainingClaimBlocks(player)));
                     sender.sendMessage(message);
                     return true;
                 }
@@ -243,8 +243,30 @@ public class ClaimCommand extends AbstractCommand {
         
         // Show claim blocks information
         if (!player.hasPermission("frizzlengaurd.admin.*")) {
-            int claimBlocks = plugin.getDataManager().getPlayerClaimBlocks(playerId);
-            sender.sendMessage(ChatColor.GREEN + "Remaining claim blocks: " + ChatColor.WHITE + claimBlocks);
+            PermissionsManager permissionsManager = plugin.getPermissionsManager();
+            int maxClaimBlocks = permissionsManager.getClaimBlocks(player);
+            int usedClaimBlocks = permissionsManager.getUsedClaimBlocks(player.getUniqueId());
+            int remainingClaimBlocks = permissionsManager.getRemainingClaimBlocks(player);
+            
+            player.sendMessage(ChatColor.YELLOW + "Your claim blocks: " + ChatColor.WHITE + 
+                    remainingClaimBlocks + "/" + maxClaimBlocks);
+            
+            // Calculate area from the region
+            int regionArea = (region.getMaxX() - region.getMinX() + 1) * (region.getMaxZ() - region.getMinZ() + 1);
+            
+            if (regionArea > remainingClaimBlocks) {
+                player.sendMessage(ChatColor.RED + "You don't have enough claim blocks! Need " + regionArea + " blocks.");
+            }
+            
+            // Show claim count information
+            int currentClaims = plugin.getRegionManager().getRegionsByOwner(player.getUniqueId()).size();
+            int maxClaims = permissionsManager.getMaxClaims(player);
+            player.sendMessage(ChatColor.YELLOW + "Your claims: " + ChatColor.WHITE + 
+                    currentClaims + "/" + maxClaims);
+            
+            if (currentClaims >= maxClaims) {
+                player.sendMessage(ChatColor.RED + "You have reached your maximum number of claims!");
+            }
         }
         
         // Visualize the region boundaries
@@ -332,11 +354,26 @@ public class ClaimCommand extends AbstractCommand {
         
         // Show claim blocks information
         if (!player.hasPermission("frizzlengaurd.admin.*")) {
-            int claimBlocks = plugin.getDataManager().getPlayerClaimBlocks(playerId);
-            player.sendMessage(ChatColor.YELLOW + "Your claim blocks: " + ChatColor.WHITE + claimBlocks);
+            PermissionsManager permissionsManager = plugin.getPermissionsManager();
+            int maxClaimBlocks = permissionsManager.getClaimBlocks(player);
+            int usedClaimBlocks = permissionsManager.getUsedClaimBlocks(player.getUniqueId());
+            int remainingClaimBlocks = permissionsManager.getRemainingClaimBlocks(player);
             
-            if (area > claimBlocks) {
+            player.sendMessage(ChatColor.YELLOW + "Your claim blocks: " + ChatColor.WHITE + 
+                    remainingClaimBlocks + "/" + maxClaimBlocks);
+            
+            if (area > remainingClaimBlocks) {
                 player.sendMessage(ChatColor.RED + "You don't have enough claim blocks! Need " + area + " blocks.");
+            }
+            
+            // Show claim count information
+            int currentClaims = plugin.getRegionManager().getRegionsByOwner(player.getUniqueId()).size();
+            int maxClaims = permissionsManager.getMaxClaims(player);
+            player.sendMessage(ChatColor.YELLOW + "Your claims: " + ChatColor.WHITE + 
+                    currentClaims + "/" + maxClaims);
+            
+            if (currentClaims >= maxClaims) {
+                player.sendMessage(ChatColor.RED + "You have reached your maximum number of claims!");
             }
         }
         

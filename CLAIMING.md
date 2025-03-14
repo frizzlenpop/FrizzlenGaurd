@@ -8,6 +8,7 @@ This document provides detailed information about creating and managing claims i
 - [Claim Basics](#claim-basics)
 - [Creating Claims](#creating-claims)
 - [Managing Claim Size](#managing-claim-size)
+- [Permission-Based Claim Limits](#permission-based-claim-limits)
 - [Subclaims](#subclaims)
 - [Claim Visualization](#claim-visualization)
 - [Claim Commands](#claim-commands)
@@ -21,7 +22,7 @@ Claiming land in FrizzlenGaurd allows you to protect your builds from griefing a
 
 - **Claims are 3D**: Claims protect from bedrock to sky limit
 - **Claim Blocks**: Players have a limited number of claim blocks that restrict how large their claims can be
-- **Multiple Claims**: Players can create multiple claims up to a configured limit
+- **Multiple Claims**: Players can create multiple claims up to their permission-based limit
 - **Owner Control**: Claim owners can add members, set permissions, and customize protection flags
 
 ## Creating Claims
@@ -83,7 +84,7 @@ Claims must meet several requirements:
 - Must not exceed the maximum size (default: 10,000 blocks)
 - Must not overlap with other claims (unless you own them)
 - You must have enough claim blocks
-- You must not exceed the maximum claims per player
+- You must not exceed your maximum number of claims (based on permissions)
 
 ## Managing Claim Size
 
@@ -91,9 +92,9 @@ Claims must meet several requirements:
 
 Each player has a limited number of claim blocks that determine how large their claims can be:
 
-- New players start with a default amount (configurable in config.yml)
-- Players earn more claim blocks by playing on the server
-- Admins can award additional claim blocks
+- Players start with claim blocks based on their permission level (250 blocks by default)
+- Higher ranks receive more claim blocks through permissions
+- The total volume of all your claims cannot exceed your available claim blocks
 
 ### Checking Your Claim Blocks
 
@@ -102,6 +103,11 @@ To see how many claim blocks you have available:
 ```
 /fg blocks
 ```
+
+This will show:
+- Your total available claim blocks
+- How many claim blocks you're currently using
+- How many claim blocks you have remaining
 
 ### Resizing Claims
 
@@ -112,6 +118,29 @@ To modify an existing claim's size:
 ```
 
 Follow the on-screen instructions to select new boundaries.
+
+## Permission-Based Claim Limits
+
+FrizzlenGaurd uses a permission-based system to control claim limits. This means your maximum claim blocks and number of allowed claims are determined by your permissions/rank on the server.
+
+### Standard Claim Limits
+
+By default, players with basic permissions receive:
+- 250 claim blocks (`frizzlengaurd.blocks.basic`)
+- 1 maximum claim (`frizzlengaurd.claims.basic`)
+
+### Rank-Based Claim Scaling
+
+As players rank up, they can receive increased claim capabilities:
+
+| Rank | Permission | Claim Blocks | Max Claims |
+|------|------------|-------------|------------|
+| Basic | `frizzlengaurd.blocks.basic` | 250 | 1 |
+| Premium | `frizzlengaurd.blocks.premium` | 500 | 2 |
+| VIP | `frizzlengaurd.blocks.vip` | 1000 | 3 |
+| Elite | `frizzlengaurd.blocks.elite` | 2500 | 5 |
+
+The system automatically uses the highest permission a player has, so if you have multiple permissions, you'll receive the benefits of your highest rank.
 
 ## Subclaims
 
@@ -172,6 +201,7 @@ This shows:
 | `/fg visualize <region>` | Show claim boundaries |
 | `/fg regioninfo <region>` | Display claim details |
 | `/fg listregions` | List your claims |
+| `/fg blocks` | Check your available claim blocks |
 
 ## Claim Permissions
 
@@ -181,4 +211,12 @@ This shows:
 | `frizzlengaurd.subclaim` | Allow creating subclaims |
 | `frizzlengaurd.resize` | Allow resizing claims |
 | `frizzlengaurd.visualize` | Allow visualizing claims |
-| `frizzlengaurd.info` | Allow viewing claim information | 
+| `frizzlengaurd.info` | Allow viewing claim information |
+| `frizzlengaurd.blocks.basic` | Grant 250 claim blocks |
+| `frizzlengaurd.blocks.premium` | Grant 500 claim blocks |
+| `frizzlengaurd.blocks.vip` | Grant 1000 claim blocks |
+| `frizzlengaurd.blocks.elite` | Grant 2500 claim blocks |
+| `frizzlengaurd.claims.basic` | Allow 1 claim |
+| `frizzlengaurd.claims.premium` | Allow 2 claims |
+| `frizzlengaurd.claims.vip` | Allow 3 claims |
+| `frizzlengaurd.claims.elite` | Allow 5 claims | 

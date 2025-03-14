@@ -27,6 +27,7 @@ permissions:
       frizzlengaurd.setflag: true
       frizzlengaurd.list: true
       frizzlengaurd.gui: true
+      frizzlengaurd.blocks: true
       frizzlengaurd.admin.*: true
   
   frizzlengaurd.claim:
@@ -64,6 +65,52 @@ permissions:
   frizzlengaurd.gui:
     description: Allows players to use the GUI
     default: true
+    
+  frizzlengaurd.blocks:
+    description: Allows players to check their claim blocks
+    default: true
+  
+  # Claim limit permissions - determines how many blocks a player can claim
+  frizzlengaurd.blocks.250:
+    description: Grants 250 claim blocks (standard)
+    default: true
+  
+  frizzlengaurd.blocks.500:
+    description: Grants 500 claim blocks
+    default: false
+  
+  frizzlengaurd.blocks.1000:
+    description: Grants 1000 claim blocks
+    default: false
+  
+  frizzlengaurd.blocks.2500:
+    description: Grants 2500 claim blocks
+    default: false
+  
+  frizzlengaurd.blocks.5000:
+    description: Grants 5000 claim blocks
+    default: false
+  
+  # Claim count permissions - determines how many claims a player can create
+  frizzlengaurd.claims.1:
+    description: Allows 1 claim (standard)
+    default: true
+  
+  frizzlengaurd.claims.2:
+    description: Allows 2 claims
+    default: false
+  
+  frizzlengaurd.claims.3:
+    description: Allows 3 claims
+    default: false
+  
+  frizzlengaurd.claims.5:
+    description: Allows 5 claims
+    default: false
+  
+  frizzlengaurd.claims.10:
+    description: Allows 10 claims
+    default: false
   
   frizzlengaurd.admin.*:
     description: Gives access to all admin commands
@@ -76,6 +123,8 @@ permissions:
       frizzlengaurd.admin.merge: true
       frizzlengaurd.admin.resize: true
       frizzlengaurd.admin.exclude: true
+      frizzlengaurd.admin.bypass: true
+      frizzlengaurd.admin.claim: true
   
   frizzlengaurd.admin.delete:
     description: Allows admins to delete any region
@@ -103,4 +152,12 @@ permissions:
   
   frizzlengaurd.admin.exclude:
     description: Allows admins to manage world exclusions
+    default: op
+    
+  frizzlengaurd.admin.bypass:
+    description: Allows admins to bypass all claim limits and restrictions
+    default: op
+    
+  frizzlengaurd.admin.claim:
+    description: Allows admins to create admin claims
     default: op

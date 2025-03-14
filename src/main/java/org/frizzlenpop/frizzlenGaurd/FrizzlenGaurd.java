@@ -11,6 +11,7 @@ import org.frizzlenpop.frizzlenGaurd.listeners.PlayerListeners;
 import org.frizzlenpop.frizzlenGaurd.listeners.InteractionListeners;
 import org.frizzlenpop.frizzlenGaurd.utils.EconomyHandler;
 import org.frizzlenpop.frizzlenGaurd.utils.Logger;
+import org.frizzlenpop.frizzlenGaurd.utils.PermissionsManager;
 import org.frizzlenpop.frizzlenGaurd.visuals.VisualsManager;
 import org.frizzlenpop.frizzlenGaurd.utils.RollbackManager;
 import org.frizzlenpop.frizzlenGaurd.commands.player.MergeCommand;
@@ -48,6 +49,7 @@ public final class FrizzlenGaurd extends JavaPlugin {
     private NotificationManager notificationManager;
     private BackupManager backupManager;
     private LimitManager limitManager;
+    private PermissionsManager permissionsManager;
     
     @Override
     public void onEnable() {
@@ -72,6 +74,7 @@ public final class FrizzlenGaurd extends JavaPlugin {
         this.notificationManager = new NotificationManager(this);
         this.backupManager = new BackupManager(this);
         this.limitManager = new LimitManager(this);
+        this.permissionsManager = new PermissionsManager(this);
         
         // Load data
         dataManager.loadData();
@@ -208,5 +211,9 @@ public final class FrizzlenGaurd extends JavaPlugin {
     
     public LimitManager getLimitManager() {
         return limitManager;
+    }
+    
+    public PermissionsManager getPermissionsManager() {
+        return permissionsManager;
     }
 }

@@ -9,6 +9,7 @@ This document provides detailed information about configuring [FrizzlenGaurd](RE
 - [General Settings](#general-settings)
 - [Economy Settings](#economy-settings)
 - [Claim Settings](#claim-settings)
+- [Permission-Based Claim System](#permission-based-claim-system)
 - [World Settings](#world-settings)
 - [Visual Settings](#visual-settings)
 - [Protection Settings](#protection-settings)
@@ -63,15 +64,21 @@ economy:
   tax-enabled: false             # Whether to tax claims
   tax-interval: 1440             # Minutes between tax collections (24 hours)
   tax-cost-per-block: 0.01       # Cost per block for taxes
+  use-vault: true                # Use Vault for economy integration
+  currency-name: "Coins"         # Name of currency to display in messages
+  currency-name-plural: "Coins"  # Plural name of currency
 ```
 
 ### Economy Integration
 
 - `economy.enabled`: Enables or disables economy features
+- `use-vault`: Set to true to use Vault for economy integration (recommended)
 - `claim-cost-per-block`: Sets the cost per block when creating a claim
 - `tax-enabled`: Enables a recurring tax on claims
 - `tax-interval`: How often taxes are collected (in minutes)
 - `tax-cost-per-block`: Cost per block for each tax collection
+- `currency-name`: Name of the currency to use in messages
+- `currency-name-plural`: Plural form of the currency name
 
 ## Claim Settings
 
@@ -80,25 +87,74 @@ These settings control claim creation and limitations:
 ```yaml
 # Claim Settings
 claims:
-  max-claims-per-player: 3       # Maximum number of claims a player can have
-  max-claim-size: 10000          # Maximum size of a claim in blocks
-  min-claim-size: 25             # Minimum size of a claim in blocks
-  max-subregions-per-claim: 5    # Maximum number of subregions per claim
-  default-claim-blocks: 1000     # Default number of claim blocks for new players
-  blocks-accrued-per-hour: 100   # Claim blocks earned per hour of playtime
+  use-permission-based-limits: true  # Use permission system for claim limits
+  default-max-claims: 1              # Default number of claims a player can have
+  default-claim-blocks: 250          # Default number of claim blocks for new players
+  max-claim-size: 10000              # Maximum size of a claim in blocks
+  min-claim-size: 25                 # Minimum size of a claim in blocks
+  max-subregions-per-claim: 5        # Maximum number of subregions per claim
+  blocks-accrued-per-hour: 0         # Claim blocks earned per hour of playtime (0 to disable)
 ```
 
 ### Claim Limits
 
-- `max-claims-per-player`: Limits how many separate claims a player can create
+- `use-permission-based-limits`: Set to true to use the permission system for claim limits
+- `default-max-claims`: Default number of claims a player can have (1 by default)
+- `default-claim-blocks`: Starting claim blocks for new players (250 by default)
 - `max-claim-size`: Maximum volume (in blocks) of a single claim
 - `min-claim-size`: Minimum volume (in blocks) of a single claim
 - `max-subregions-per-claim`: Limits subregions within a main claim
+- `blocks-accrued-per-hour`: Rate at which players earn additional claim blocks (0 to disable)
 
-### Claim Blocks
+## Permission-Based Claim System
 
-- `default-claim-blocks`: Starting claim blocks for new players
-- `blocks-accrued-per-hour`: Rate at which players earn additional claim blocks
+FrizzlenGaurd uses a permission-based system to control claim blocks and limits. This allows you to scale claim capabilities with player ranks:
+
+```yaml
+# Permission-Based Claim System
+permission-claim-system:
+  enabled: true                      # Enable permission-based claim limits
+  override-default-values: true      # Override default values with permission-based values
+  
+  # Permission for maximum number of claims
+  max-claims-permissions:
+    "frizzlengaurd.claims.basic": 1
+    "frizzlengaurd.claims.premium": 2
+    "frizzlengaurd.claims.vip": 3
+    "frizzlengaurd.claims.elite": 5
+  
+  # Permission for maximum claim blocks
+  claim-blocks-permissions:
+    "frizzlengaurd.blocks.basic": 250
+    "frizzlengaurd.blocks.premium": 500
+    "frizzlengaurd.blocks.vip": 1000
+    "frizzlengaurd.blocks.elite": 2500
+```
+
+### Permission System Configuration
+
+- `enabled`: Enables or disables the permission-based claim system
+- `override-default-values`: If true, permission values override default values
+
+### Permission-Based Claim Limits
+
+These permissions control how many claims a player can have:
+
+- `frizzlengaurd.claims.basic`: 1 claim (standard)
+- `frizzlengaurd.claims.premium`: 2 claims
+- `frizzlengaurd.claims.vip`: 3 claims
+- `frizzlengaurd.claims.elite`: 5 claims
+
+### Permission-Based Claim Blocks
+
+These permissions control how many claim blocks a player has:
+
+- `frizzlengaurd.blocks.basic`: 250 claim blocks (standard)
+- `frizzlengaurd.blocks.premium`: 500 claim blocks
+- `frizzlengaurd.blocks.vip`: 1000 claim blocks
+- `frizzlengaurd.blocks.elite`: 2500 claim blocks
+
+The plugin will automatically use the highest permission value a player has. For example, if a player has both `frizzlengaurd.blocks.basic` and `frizzlengaurd.blocks.premium`, they will receive 500 claim blocks.
 
 ## World Settings
 
@@ -255,18 +311,4 @@ performance:
   scan-batch-size: 100           # Number of chunks to scan in a batch
 ```
 
-These advanced settings help optimize performance on busy servers.
-
-### Permission-Based Claim Blocks
-
-You can create permission-based claim block allocations:
-
-```yaml
-# Permission Claim Blocks
-permission-claim-blocks:
-  "frizzlengaurd.blocks.vip": 5000
-  "frizzlengaurd.blocks.premium": 10000
-  "frizzlengaurd.blocks.elite": 20000
-```
-
-Players with these permissions will receive the specified number of claim blocks. 
+These advanced settings help optimize performance on busy servers. 

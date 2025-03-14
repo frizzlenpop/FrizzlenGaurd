@@ -17,12 +17,31 @@ economy:
 
 # Claim Settings
 claims:
-  max-claims-per-player: 3 # Maximum number of claims a player can have
   max-claim-size: 10000 # Maximum size of a claim in blocks
   min-claim-size: 25 # Minimum size of a claim in blocks
   max-subregions-per-claim: 5 # Maximum number of subregions per claim
-  default-claim-blocks: 1000 # Default number of claim blocks for new players
   blocks-accrued-per-hour: 100 # Claim blocks earned per hour of playtime
+  
+  # Default values if no permissions are found
+  default-max-claims: 1 # Default maximum claims if no permission is found
+  default-claim-blocks: 250 # Default claim blocks if no permission is found
+  
+  # Permission-based claims
+  # Players can have different claim limits based on their permissions
+  # Format for claim blocks: frizzlengaurd.blocks.<number>
+  # Format for max claims: frizzlengaurd.claims.<number>
+  # 
+  # Examples:
+  # - Player with frizzlengaurd.blocks.500 gets 500 claim blocks
+  # - Player with frizzlengaurd.claims.3 can have up to 3 claims
+  #
+  # Higher permissions override lower ones
+  # Players with frizzlengaurd.admin.bypass get unlimited claims and blocks
+  
+  # Whether to use legacy max-claims-per-player value for all players instead of permission-based
+  use-legacy-claims-limit: false
+  # Legacy setting kept for backward compatibility
+  max-claims-per-player: 3 # Maximum number of claims a player can have (only used if use-legacy-claims-limit is true)
 
 # World Settings
 worlds:

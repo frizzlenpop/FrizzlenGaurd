@@ -319,4 +319,28 @@ public class RegionManager {
         playerRegions.clear();
         worldRegions.clear();
     }
+    
+    /**
+     * Gets all regions owned by a specific player
+     * 
+     * @param playerId The UUID of the player
+     * @return List of regions owned by the player
+     */
+    public List<Region> getRegionsByOwner(UUID playerId) {
+        return getAllRegions().stream()
+                .filter(region -> region.getOwner().equals(playerId))
+                .collect(Collectors.toList());
+    }
+    
+    /**
+     * Gets the total number of claim blocks used by a player
+     * 
+     * @param playerId The UUID of the player
+     * @return The total volume of all regions owned by the player
+     */
+    public int getUsedClaimBlocks(UUID playerId) {
+        return getRegionsByOwner(playerId).stream()
+                .mapToInt(Region::getVolume)
+                .sum();
+    }
 } 

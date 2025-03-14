@@ -110,6 +110,10 @@ public abstract class Menu {
      * Open the inventory for the player
      */
     public void open() {
+        // Register this menu with the menu listener
+        plugin.getMenuListener().registerMenu(player, this);
+        
+        // Then open the inventory
         player.openInventory(inventory);
     }
     

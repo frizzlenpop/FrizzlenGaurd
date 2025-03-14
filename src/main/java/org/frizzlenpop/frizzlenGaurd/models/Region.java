@@ -38,6 +38,7 @@ public class Region implements ConfigurationSerializable {
         this.id = id;
         this.name = name;
         this.owner = owner;
+        this.owners.put(owner, Role.OWNER);
         this.subregions = new ArrayList<>();
         this.logs = new ArrayList<>();
         
@@ -390,10 +391,10 @@ public class Region implements ConfigurationSerializable {
     
     public Role getRole(Player player) {
         UUID playerId = player.getUniqueId();
-        if (owners.containsKey(playerId)) {
+        if (playerId.equals(owner) || owners.containsKey(playerId)) {
             return Role.OWNER;
         } else if (members.containsKey(playerId)) {
-            return Role.MEMBER;
+            return members.get(playerId);
         }
         return Role.VISITOR;
     }
@@ -416,7 +417,8 @@ public class Region implements ConfigurationSerializable {
     }
     
     public boolean isOwner(Player player) {
-        return owners.containsKey(player.getUniqueId());
+        UUID playerId = player.getUniqueId();
+        return playerId.equals(owner) || owners.containsKey(playerId);
     }
     
     public void addOwner(UUID playerId) {

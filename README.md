@@ -31,7 +31,13 @@ FrizzlenGaurd allows players to protect their builds by creating claims (regions
 - **Visual Feedback**: Particle effects for region boundaries and selection preview
 - **GUI Interface**: User-friendly menus for region management
 - **Logging System**: Track changes and modifications within regions
-- **Economy Integration**: Optional Vault integration for land claiming costs
+- **Vault Integration**: Complete Vault support for land claiming costs and transactions
+
+### Permission Features
+- **Rank-Based Claim System**: Scale claim limits based on player ranks/permissions
+- **Permission Controlled Blocks**: Define claim block limits based on permissions (250 for standard users)
+- **Claim Limit Control**: Permission-based number of claims (1 claim for standard users)
+- **Admin Bypass**: Special permissions for administrative control
 
 ### Admin Tools
 - **Admin Claims**: Powerful tool for creating server-controlled regions without restrictions
@@ -42,8 +48,9 @@ FrizzlenGaurd allows players to protect their builds by creating claims (regions
 
 1. Download the latest release from the GitHub repository
 2. Place the JAR file in your server's `plugins` folder
-3. Restart your server
-4. Configure the plugin in `plugins/FrizzlenGaurd/config.yml`
+3. Make sure Vault is installed for economy features
+4. Restart your server
+5. Configure the plugin in `plugins/FrizzlenGaurd/config.yml`
 
 ## Basic Usage
 
@@ -85,6 +92,7 @@ For example:
 - `/fg listregions` - List your accessible regions
 - `/fg gui` - Open management GUI
 - `/fg logs <region>` - View region logs
+- `/fg blocks` - Check your available claim blocks
 
 ### Admin Commands
 - `/fg adminclaim <name>` - Create an admin claim without restrictions
@@ -112,6 +120,18 @@ FrizzlenGaurd uses a role-based permission system within regions:
 - `frizzlengaurd.admin.claim` - Allow creating admin claims
 - `frizzlengaurd.admin.bypass` - Bypass region restrictions
 - `frizzlengaurd.admin.*` - All admin permissions
+
+### Claim Limit Permissions
+
+- `frizzlengaurd.blocks.basic` - Grant 250 claim blocks (standard)
+- `frizzlengaurd.blocks.premium` - Grant 500 claim blocks
+- `frizzlengaurd.blocks.vip` - Grant 1000 claim blocks
+- `frizzlengaurd.blocks.elite` - Grant 2500 claim blocks
+
+- `frizzlengaurd.claims.basic` - Allow 1 claim (standard)
+- `frizzlengaurd.claims.premium` - Allow 2 claims
+- `frizzlengaurd.claims.vip` - Allow 3 claims
+- `frizzlengaurd.claims.elite` - Allow 5 claims
 
 ## Flag System
 

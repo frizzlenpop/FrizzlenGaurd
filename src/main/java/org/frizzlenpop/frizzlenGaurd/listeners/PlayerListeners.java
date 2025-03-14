@@ -39,15 +39,26 @@ public class PlayerListeners implements Listener {
         Player player = event.getPlayer();
         ItemStack item = event.getItem();
         
+        // Debug logging for stick interactions
+        if (item != null && item.getType() == Material.STICK) {
+            Logger.debug("Player " + player.getName() + " interacted with a stick - Action: " + event.getAction());
+            
+            if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) {
+                Logger.debug("Stick has display name: " + item.getItemMeta().getDisplayName());
+            }
+        }
+        
         // Check if the player is using a selection stick
         if (item != null && item.getType() == Material.STICK && 
                 item.hasItemMeta() && item.getItemMeta().hasDisplayName() &&
                 item.getItemMeta().getDisplayName().equals(SELECTION_STICK_NAME)) {
             
+            Logger.debug("Player is using selection stick");
             event.setCancelled(true); // Prevent normal stick behavior
             
             // Get the clicked block
             if (event.getClickedBlock() == null) {
+                Logger.debug("No block was clicked");
                 return;
             }
             
@@ -55,6 +66,7 @@ public class PlayerListeners implements Listener {
             ClaimCommand claimCommand = getClaimCommand();
             
             if (claimCommand == null) {
+                Logger.debug("Failed to get ClaimCommand instance");
                 return;
             }
             
@@ -91,6 +103,7 @@ public class PlayerListeners implements Listener {
                 }
                 return;
             }
+            return; // Add this to ensure we exit the method if using a selection stick
         }
         
         // Handle normal stick right-click for region visualization
@@ -139,6 +152,13 @@ public class PlayerListeners implements Listener {
         ItemMeta meta = stick.getItemMeta();
         if (meta != null) {
             meta.setDisplayName(SELECTION_STICK_NAME);
+            
+            // Add instructions as lore
+            java.util.List<String> lore = new java.util.ArrayList<>();
+            lore.add(ChatColor.GRAY + "Left-click: Set first position");
+            lore.add(ChatColor.GRAY + "Right-click: Set second position");
+            meta.setLore(lore);
+            
             stick.setItemMeta(meta);
         }
         return stick;

@@ -6,6 +6,7 @@ This document provides detailed information for server administrators about the 
 
 - [Admin Claims](#admin-claims)
 - [Region Management](#region-management)
+- [Managing Claim Permissions](#managing-claim-permissions)
 - [Backup System](#backup-system)
 - [Administrative Commands](#administrative-commands)
 - [Permissions](#permissions)
@@ -72,6 +73,76 @@ Check for potential issues in the region database:
 ```
 This will report problems like overlapping regions, invalid data, or other inconsistencies.
 
+## Managing Claim Permissions
+
+FrizzlenGaurd uses a permission-based system for controlling claim limits and blocks. This allows you to scale players' claiming capabilities based on their rank or status on your server.
+
+### Default Claim Limits
+
+By default, players with basic permissions receive:
+- 250 claim blocks (`frizzlengaurd.blocks.basic`)
+- 1 maximum claim (`frizzlengaurd.claims.basic`)
+
+### Permission Structure
+
+The permission system is structured in two parts:
+
+#### 1. Claim Block Permissions
+- `frizzlengaurd.blocks.basic` - 250 blocks
+- `frizzlengaurd.blocks.premium` - 500 blocks
+- `frizzlengaurd.blocks.vip` - 1000 blocks
+- `frizzlengaurd.blocks.elite` - 2500 blocks
+
+#### 2. Claim Count Permissions
+- `frizzlengaurd.claims.basic` - 1 claim
+- `frizzlengaurd.claims.premium` - 2 claims
+- `frizzlengaurd.claims.vip` - 3 claims
+- `frizzlengaurd.claims.elite` - 5 claims
+
+### Setting Up Permissions
+
+To implement the permission-based claim system:
+
+1. Make sure `use-permission-based-limits` is set to `true` in the configuration
+2. Configure your permission plugin to assign the appropriate permissions to different ranks
+3. The plugin will automatically apply the highest permission a player has for each category
+
+Example permission configuration for LuckPerms:
+
+```
+/lp group default permission set frizzlengaurd.blocks.basic true
+/lp group premium permission set frizzlengaurd.blocks.premium true
+/lp group vip permission set frizzlengaurd.blocks.vip true
+/lp group elite permission set frizzlengaurd.blocks.elite true
+
+/lp group default permission set frizzlengaurd.claims.basic true
+/lp group premium permission set frizzlengaurd.claims.premium true
+/lp group vip permission set frizzlengaurd.claims.vip true
+/lp group elite permission set frizzlengaurd.claims.elite true
+```
+
+### Checking Player Claim Blocks
+
+As an administrator, you can check how many claim blocks a player has:
+
+```
+/fg blocks <player>
+```
+
+### Vault Integration
+
+FrizzlenGaurd is fully integrated with Vault for economy features. If you have Vault and an economy plugin installed, players can:
+
+- Pay for claims based on size
+- Pay taxes on claims (if enabled)
+- Buy additional claim blocks (if configured)
+
+To set up the Vault integration:
+
+1. Install Vault and a compatible economy plugin
+2. Set `economy.enabled` and `economy.use-vault` to `true` in the configuration
+3. Configure the economy settings to match your server's economy
+
 ## Backup System
 
 FrizzlenGaurd includes an automatic backup system that periodically saves region data.
@@ -110,6 +181,7 @@ Restore a specific backup:
 | `/fg reload` | Reload plugin configuration |
 | `/fg merge <target> <source>` | Merge two regions |
 | `/fg resize <region>` | Resize a region |
+| `/fg blocks <player>` | Check a player's claim blocks |
 
 ## Permissions
 
@@ -123,6 +195,7 @@ Restore a specific backup:
 | `frizzlengaurd.admin.bypass` | Bypass all region restrictions |
 | `frizzlengaurd.admin.merge` | Allow merging any regions |
 | `frizzlengaurd.admin.resize` | Allow resizing any regions |
+| `frizzlengaurd.admin.blocks` | Allow checking other players' blocks |
 | `frizzlengaurd.admin.*` | Grant all admin permissions |
 
 ## Configuration
@@ -148,12 +221,33 @@ max-backups: 10 # Number of backups to keep
 
 ```yaml
 claims:
-  max-claims-per-player: 3
+  use-permission-based-limits: true
+  default-max-claims: 1
+  default-claim-blocks: 250
   max-claim-size: 10000
   min-claim-size: 25
   max-subregions-per-claim: 5
-  default-claim-blocks: 1000
-  blocks-accrued-per-hour: 100
+  blocks-accrued-per-hour: 0
+```
+
+### Permission-Based Claim System
+
+```yaml
+permission-claim-system:
+  enabled: true
+  override-default-values: true
+  
+  max-claims-permissions:
+    "frizzlengaurd.claims.basic": 1
+    "frizzlengaurd.claims.premium": 2
+    "frizzlengaurd.claims.vip": 3
+    "frizzlengaurd.claims.elite": 5
+  
+  claim-blocks-permissions:
+    "frizzlengaurd.blocks.basic": 250
+    "frizzlengaurd.blocks.premium": 500
+    "frizzlengaurd.blocks.vip": 1000
+    "frizzlengaurd.blocks.elite": 2500
 ```
 
 ### World Settings
